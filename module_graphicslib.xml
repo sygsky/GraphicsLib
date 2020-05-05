@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_graphicslib" default="compile.module.graphicslib">
+  <dirname property="module.graphicslib.basedir" file="${ant.file.module_graphicslib}"/>
+  
+  <property name="module.jdk.home.graphicslib" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.graphicslib" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.graphicslib" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.graphicslib" value="${compiler.args}"/>
+  
+  <property name="graphicslib.output.dir" value="${module.graphicslib.basedir}/../../Mapyrus/out/production/GraphicsLib"/>
+  <property name="graphicslib.testoutput.dir" value="${module.graphicslib.basedir}/../../Mapyrus/out/test/GraphicsLib"/>
+  
+  <path id="graphicslib.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="graphicslib.module.production.classpath">
+    <path refid="${module.jdk.classpath.graphicslib}"/>
+    <pathelement location="${commonutl.output.dir}"/>
+  </path>
+  
+  <path id="graphicslib.runtime.production.module.classpath">
+    <pathelement location="${graphicslib.output.dir}"/>
+    <path refid="commonutl.runtime.production.module.classpath"/>
+  </path>
+  
+  <path id="graphicslib.module.classpath">
+    <path refid="${module.jdk.classpath.graphicslib}"/>
+    <pathelement location="${graphicslib.output.dir}"/>
+    <pathelement location="${commonutl.output.dir}"/>
+    <pathelement location="${commonutl.testoutput.dir}"/>
+  </path>
+  
+  <path id="graphicslib.runtime.module.classpath">
+    <pathelement location="${graphicslib.output.dir}"/>
+    <pathelement location="${graphicslib.testoutput.dir}"/>
+    <path refid="commonutl.runtime.module.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.graphicslib">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.graphicslib">
+    <patternset refid="excluded.from.module.graphicslib"/>
+  </patternset>
+  
+  <path id="graphicslib.module.sourcepath">
+    <dirset dir="${module.graphicslib.basedir}/../../Libs">
+      <include name="GraphicsLib"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.graphicslib" depends="compile.module.graphicslib.production,compile.module.graphicslib.tests" description="Compile module GraphicsLib"/>
+  
+  <target name="compile.module.graphicslib.production" depends="compile.module.commonutl" description="Compile module GraphicsLib; production classes">
+    <mkdir dir="${graphicslib.output.dir}"/>
+    <javac2 destdir="${graphicslib.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.graphicslib}/javac">
+      <compilerarg line="${compiler.args.graphicslib}"/>
+      <bootclasspath refid="graphicslib.module.bootclasspath"/>
+      <classpath refid="graphicslib.module.production.classpath"/>
+      <src refid="graphicslib.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.graphicslib"/>
+    </javac2>
+    
+    <copy todir="${graphicslib.output.dir}">
+      <fileset dir="${module.graphicslib.basedir}">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.graphicslib.tests" depends="compile.module.graphicslib.production" description="compile module GraphicsLib; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.graphicslib" description="cleanup module">
+    <delete dir="${graphicslib.output.dir}"/>
+    <delete dir="${graphicslib.testoutput.dir}"/>
+  </target>
+</project>
