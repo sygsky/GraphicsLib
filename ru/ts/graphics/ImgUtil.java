@@ -8,6 +8,7 @@ import sun.awt.image.ToolkitImage;
 
 import javax.imageio.*;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
+import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
@@ -1463,5 +1464,35 @@ public class ImgUtil
 		}
 	}
 
+	/**
+	 * Gets image dimensions for given file  from
+	 * <a href="https://stackoverflow.com/questions/672916/how-to-get-image-height-and-width-using-java/12164026#12164026">Stackoverflow</a>
+	 * @param imgFile image file
+	 * @return dimensions of image
+	 * @throws IOException if the file is not a known image
+	 */
+	public static Dimension getImageDimension(File imgFile) throws IOException {
+		int pos = imgFile.getName().lastIndexOf(".");
+		if (pos == -1)
+			throw new IOException("--- No extension for file: " + imgFile.getAbsolutePath());
+		String suffix = imgFile.getName().substring(pos + 1);
+		Iterator<ImageReader> iter = ImageIO.getImageReadersBySuffix(suffix);
+		while(iter.hasNext()) {
+			ImageReader reader = iter.next();
+			try {
+				ImageInputStream stream = new FileImageInputStream( imgFile);
+				reader.setInput(stream);
+				int width = reader.getWidth(reader.getMinIndex());
+				int height = reader.getHeight(reader.getMinIndex());
+				return new Dimension(width, height);
+			} catch (IOException e) {
+				Text.serr( "--- Error reading: \"%s\" -> %s", imgFile.getAbsolutePath(),  e.getLocalizedMessage()  );
+			} finally {
+				reader.dispose();
+			}
+		}
+
+		throw new IOException("--- Not a known image file: " + imgFile.getAbsolutePath());
+	}
 
 }
