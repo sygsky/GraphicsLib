@@ -83,18 +83,19 @@ public class Polygons {
         }
         return locatedInPolygon;
     }
+
     public static final boolean PointIsInPoly( double[] pnt, double[] polyx, double[] polyy ) {
         {
             int i, j;
             boolean res = false;
-            for (i = 0, j = polyx.length-1; i < polyx.length; j = i++) {
-                final double pnty = pnt[1];
-                final double pntx = pnt[0];
+            final double pntx = pnt[0];
+            final double pnty = pnt[1];
+            for ( i = 0, j = polyx.length - 1; i < polyx.length; j = i++ ) {
                 final double poly_i = polyy[i];
                 final double polx_i = polyx[i];
                 final double poly_j = polyy[j];
                 final double polx_j = polyx[j];
-                if ( (( poly_i > pnty ) != ( poly_j > pnty ) ) &&
+                if ( ( ( poly_i > pnty ) != ( poly_j > pnty ) ) &&
                         ( pntx < ( polx_j - polx_i ) * ( pnty - poly_i ) / ( poly_j - poly_i ) + polx_i ) )
                     res = !res;
             }
