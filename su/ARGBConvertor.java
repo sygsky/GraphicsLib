@@ -99,12 +99,7 @@ public class ARGBConvertor
 		}
 		String oPath = cmd.value( 'о', 'o' );
 
-		if ( !cmd.contains( 'c', 'с' ))
-		{
-			System.err.println( "--- Expected key -с not found" );
-			return;
-		}
-		if ( !cmd.contains( 'c', 'с' ))
+		if ( !cmd.contains( ICmdArgs.Keys.C_KEYS) )
 		{
 			System.err.println( "--- Expected key -с <color> not found" );
 			return;
